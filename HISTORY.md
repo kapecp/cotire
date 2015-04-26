@@ -1,3 +1,35 @@
+## 1.7.2 (2015-04-22)
+
+* reduce configure time overhead.
+* fix bug with dependency checking when using Xcode.
+* remove obsolete code required for CMake versions older than 2.8.12.
+* streamline debugging output.
+
+## 1.7.1 (2015-04-06)
+
+* fix problem with CMake's automatic Qt processing for generated unity targets.
+* added a section on common pitfalls when using cotire to the manual.
+* remove obsolete code required for CMake versions older than 2.8.12.
+* streamline debugging output.
+* activate select CMake policies.
+
+## 1.7.0 (2015-03-29)
+
+* fix CMake 3.2 compatibility issues.
+* cotire now requires CMake 2.8.12 or newer.
+* copy `IMPORT_PREFIX` and `IMPORT_SUFFIX` target properties for unity targets (thanks peterhuene).
+* new property `COTIRE_PREFIX_HEADER_INCLUDE_PRIORITY_PATH` allows for organizing includes
+  added to the prefix header by priority (thanks ArnaudD-FR).
+* for Visual Studio C++, increase static precompiled header memory allocation.
+* the default strategy for setting up a unity target's linked libraries is now `COPY_UNITY`.
+* for Qt projects, fix problem with handling of `AUTOMOC` in generated unity target.
+* fix problem with generating the cotire intermediate directory.
+* documentation updates.
+
+## 1.6.9 (2015-01-18)
+
+* fix bug with parsing of localized MSVC `/showIncludes` output.
+
 ## 1.6.8 (2014-12-28)
 
 * fix bug with generation of unity source file segments for parallel builds.
