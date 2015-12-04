@@ -258,6 +258,7 @@ generated files (`<LANG>` can be set to `CXX` or `C`). The target property
     get_target_property(_unitySource example COTIRE_CXX_UNITY_SOURCE)
     get_target_property(_prefixHeader example COTIRE_CXX_PREFIX_HEADER)
     get_target_property(_precompiledHeader example COTIRE_CXX_PRECOMPILED_HEADER)
+    get_target_property(_unityTargetName example COTIRE_UNITY_TARGET_NAME)
 
 If a source file's `COMPILE_FLAGS` are modified by cotire, it sets the source file property
 `COTIRE_TARGET` to the name of the target, that the source file's build command has been
@@ -298,7 +299,7 @@ ensure that the project builds properly without cotire.
 
 ### disabling precompiled headers and unity builds
 
-If the target's build process should not be modified to make us of the generated precompiled
+If the target's build process should not be modified to make use of the generated precompiled
 header, the target property `COTIRE_ENABLE_PRECOMPILED_HEADER` can be set to `FALSE`:
 
     set_target_properties(example PROPERTIES COTIRE_ENABLE_PRECOMPILED_HEADER FALSE)
@@ -691,7 +692,7 @@ inherits the property value from its enclosing directory.
 common pitfalls
 ---------------
 
-### include the `cotire.cmake` module correclty
+### include the `cotire.cmake` module correctly
 
 If CMake issues the message `Unknown CMake command "cotire"`, double check that the cotire module
 has been included correctly in your project. See the manual section "cotire basic usage".

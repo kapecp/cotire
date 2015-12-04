@@ -1,3 +1,23 @@
+## 1.7.5 (2015-10-27)
+
+* handle visibility target properties (`CXX_VISIBILITY_PRESET` and `VISIBILITY_INLINES_HIDDEN`).
+* better handling of include directories and system include directories.
+* parse additional system include directories from target compile flags.
+* activate select CMake policies.
+
+## 1.7.4 (2015-10-10)
+
+* set up single unity source file for prefix header generation.
+* increase MSVC default PCH memory to 128M.
+* remove obsolete code.
+
+## 1.7.3 (2015-07-25)
+
+* handle language standard target properties (e.g., `CXX_STANDARD`).
+* apply user provided prefix header to unity build target.
+* remove effect of `COTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES` on generated unity target.
+* manual updates.
+
 ## 1.7.2 (2015-04-22)
 
 * reduce configure time overhead.
