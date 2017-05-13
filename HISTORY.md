@@ -1,3 +1,28 @@
+## 1.7.9 (2016-12-08)
+
+* CMake 3.6 and 3.7 compatibility.
+* fix ccache 3.2 compatibility issues.
+* fix bugs with handling language standard related properties (e.g., `CXX_STANDARD`, `CXX_EXTENSIONS`).
+* make prefix header generation and precompiled header compilation depend on the compiler executable.
+* fix Qt automoc handling for Windows (thanks jcelerier).
+* convert Windows paths in include directories to CMake paths (thanks wdx04).
+* replace object library with corresponding unity object library when using `COPY_UNITY` linking strategy.
+* better error reporting from prefix header generation.
+ 
+## 1.7.8 (2016-03-27)
+
+* fix `COPY_UNITY` linking strategy for private link dependencies.
+* honor `CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE` upon handling of target usage requirements.
+* reworked setting up of `LINK_LIBRARIES` and `INTERFACE_LINK_LIBRARIES` properties for unity targets.
+
+## 1.7.7 (2016-03-20)
+
+* CMake 3.5 compatibility.
+* fix bugs related to handling of interface libraries.
+* output shorter log messages when using Visual Studio IDE.
+* don't disable PCH if CMAKE_<LANG>_COMPILER_ID is not set (thanks jcelerier).
+* add support for compiler launchers introduced in CMake 3.4 (thanks misery).
+
 ## 1.7.6 (2015-12-06)
 
 * fix CMake 3.4 compatibility issues.

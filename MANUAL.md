@@ -9,8 +9,8 @@ motivation
 ----------
 
 Cotire was born out of a dissatisfaction with the existing CMake solutions for adding
-[precompiled header][1260] support and [unity build][kde4macros] support to CMake based build
-systems. The design of cotire tries to adhere to the following principles:
+[precompiled header][1260] support and unity build support to CMake based build systems.
+The design of cotire tries to adhere to the following principles:
 
 #### as automatic as possible
 
@@ -340,7 +340,7 @@ file. The path is interpreted relative to the target source directory:
     cotire(example)
 
 If the prefix header `stdafx.h` needs an accompanying source file (e.g., `stdafx.cpp`) in order
-to be pre-compiled properly, that source file needs to be the first one on the list of source
+to be precompiled properly, that source file needs to be the first one on the list of source
 files in the target's `add_executable` or `add_library` call.
 
 The property `COTIRE_CXX_PREFIX_HEADER_INIT` can also be set to a list of header files which will
@@ -548,6 +548,11 @@ enabled in the following way upon configuring the project:
     $ export CCACHE_SLOPPINESS=pch_defines,time_macros
     $ cmake ..
 
+Alternatively, for CMake 3.4 or later compiler wrappers can be enabled by pointing the CMake
+variable `CMAKE_CXX_COMPILER_LAUNCHER` to the compiler wrapper executable upon configuring:
+
+    $ cmake -D CMAKE_CXX_COMPILER_LAUNCHER=/usr/local/bin/ccache <path-to-source>
+
 Note that with ccache in order for precompiled headers to work properly, it is necessary to set
 the environment variable `CCACHE_SLOPPINESS` to `pch_defines,time_macros`. Otherwise the build
 process may abort with the following error message:
@@ -596,7 +601,8 @@ original target.
 
 If this property is set to `COPY_UNITY`, the unity target's link libraries will be copied from the
 original target but instead of copying a linked target verbatim, the target's corresponding unity
-target will be preferred, provided one exists.
+target will be preferred, provided one exists. This also applies to object libraries, which have
+been added to the original target with a `TARGET_OBJECTS` generator expression.
 
 As of cotire 1.7.0, the default linking strategy for unit targets is `COPY_UNITY`.
 
@@ -654,7 +660,7 @@ The global `install_unity` target must depend on all unity targets that should b
 
 ### customized inclusion of system headers
 
-If a system header ends up in a pre-compiled header, it is not possible to customize the inclusion
+If a system header ends up in a precompiled header, it is not possible to customize the inclusion
 of that header in a source file through preprocessor defines.
 
 For example, under Windows one may want to include `Windows.h` with `NOMINMAX` defined to prevent
@@ -713,8 +719,9 @@ Don't do this:
 
 ### always apply cotire in the same source directory where a target has been added
 
-CMake targets are globally visible. Nevertheless, it is important that the `cotire` function is called
-for a target in the exact same directory that creates the target with `add_library` or `add_executable`.
+CMake targets are globally visible. Nevertheless, it is important that the `cotire` function is
+called for a target in the exact same directory that creates the target with `add_library` or
+`add_executable`.
 
 Don't do this:
 
@@ -728,14 +735,21 @@ different directory and you may get odd messages about missing source files.
 known issues
 ------------
 
+### Ninja compatibility
+
+Under Ninja indirect prefix header dependencies are ignored by the generated build system. Cotire
+uses the `IMPLICIT_DEPENDS` option of `add_custom_command` to make the precompiled header depend
+on header files indirectly included by the prefix header. The `IMPLICIT_DEPENDS` option is not
+supported by CMake's Ninja generator. See [CMake issue][ninja_issue].
+
 ### using source files for multiple targets
 
 When the same set of source files is used for different targets (e.g., for producing a static
 and a shared library variant from the same sources), using a precompiled header may not work.
 Under certain circumstances, cotire cannot enable the precompiled header usage by changing the
 `COMPILE_FLAGS` property of the whole target, but must set the `COMPILE_FLAGS` properties of
-individual target source files instead. This will break the usage of the source file for
-multiple targets.
+individual target source files instead. This will break the usage of the source file for multiple
+targets.
 
 ### multi-architecture builds under Mac OS X
 
@@ -762,20 +776,20 @@ is not compatible with those of precompiled header file) upon compilation of cot
 Cotire is not compatible with [Xoreax IncrediBuild][XGE].
 
 [1260]:http://www.cmake.org/Bug/view.php?id=1260
-[ccch]:http://ccache.samba.org/
-[ccch_pch]:http://ccache.samba.org/manual.html#_precompiled_headers
+[ccch]:https://ccache.samba.org/
+[ccch_pch]:https://ccache.samba.org/manual.html#_precompiled_headers
 [clang_pch]:http://clang.llvm.org/docs/UsersManual.html#precompiled-headers
 [fsedit_qt4]:http://www.vikingsoft.eu/fseditor.html
 [fsedit_qt5]:https://github.com/joonhwan/fsedit-qt5
-[gcc_pch]:http://gcc.gnu.org/onlinedocs/gcc/Precompiled-Headers.html
-[kde4macros]:http://kbfxmenu.googlecode.com/svn/trunk/kbfx3/cmakemodules/KDE4Macros.cmake
-[msvc_pch]:http://msdn.microsoft.com/en-us/library/szfdksca(v=vs.90).aspx
-[msvc_pch_create]:http://msdn.microsoft.com/en-us/library/7zc28563(v=vs.90).aspx
-[msvc_pch_use]:http://msdn.microsoft.com/en-us/library/z0atkd6c(v=vs.90).aspx
-[EoUB]:http://engineering-game-dev.com/2009/12/15/the-evils-of-unity-builds/
-[pch]:http://en.wikipedia.org/wiki/Precompiled_header
-[scu]:http://en.wikipedia.org/wiki/Single_Compilation_Unit
-[objlib]:http://www.cmake.org/cmake/help/v2.8.12/cmake.html#command:add_library
-[pfh]:http://en.wikipedia.org/wiki/Prefix_header
-[icc_linux]:http://software.intel.com/en-us/non-commercial-software-development
-[XGE]:http://www.incredibuild.com
+[gcc_pch]:https://gcc.gnu.org/onlinedocs/gcc/Precompiled-Headers.html
+[msvc_pch]:https://msdn.microsoft.com/en-us/library/szfdksca(v=vs.90).aspx
+[msvc_pch_create]:https://msdn.microsoft.com/en-us/library/7zc28563(v=vs.90).aspx
+[msvc_pch_use]:https://msdn.microsoft.com/en-us/library/z0atkd6c(v=vs.90).aspx
+[ninja_issue]:https://cmake.org/Bug/view.php?id=13234
+[EoUB]:https://engineering-game-dev.com/2009/12/15/the-evils-of-unity-builds/
+[pch]:https://en.wikipedia.org/wiki/Precompiled_header
+[scu]:https://en.wikipedia.org/wiki/Single_Compilation_Unit
+[objlib]:https://cmake.org/cmake/help/v2.8.12/cmake.html#command:add_library
+[pfh]:https://en.wikipedia.org/wiki/Prefix_header
+[icc_linux]:https://software.intel.com/en-us/c-compilers/ipsxe-support
+[XGE]:https://www.incredibuild.com/
